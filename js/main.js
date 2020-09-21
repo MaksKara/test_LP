@@ -52,6 +52,9 @@ function alignHeight() {
 }
 
 //=================================
+//************LOCAL****************
+//***********STORAGE***************
+//=================================
 let cart = {};
 
 document.addEventListener('click', event => {
@@ -62,13 +65,24 @@ document.addEventListener('click', event => {
 });
 
 function addToCart(event) {
+	let arr = [];
 	const art = event.target.dataset.id;
 	if(cart[art] != undefined){
 		cart[art]++;
 	} else {	
 		cart[art] = 1;
 	}
+	
 	localStorage.setItem('cart', JSON.stringify(cart));
+	for(let g of products){
+		if(art == `${g.attribute}`){
+			arr = [
+				{price: `${g.price}`, img: `${g.img}`, title: `${g.title}`}
+			];
+		localStorage.setItem('arr', JSON.stringify(arr));
+		console.log(arr);
+		}
+	}
 	console.log(cart);
 	showMiniCart();
 }
@@ -77,7 +91,7 @@ function checkCard() {
 	let items = localStorage.getItem('cart');
 	if(items != null){
 		cart = JSON.parse(items);
-	} 
+	}
 }
 
 function showMiniCart() {
