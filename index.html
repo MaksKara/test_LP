@@ -5,10 +5,58 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<title>Document</title>
 	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/jquery.fancybox.css">
 	<link rel="stylesheet" href="css/fonts.css">
 	<link rel="stylesheet" href='css/style.css'>
 </head>
 <body>
+		<!-- HEADER -->
+	<header class="header" id="header">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-2">
+					<a href="#" class="header__title">Aditii</a>
+				</div>
+				<div class="col-lg-auto ml-auto cont-center">
+					<div class="header__search">
+						<input type="search" class="header__input">
+						<input type="image" src="assets/img/header/Shape.png" alt="share" class="header__share">
+					</div>
+				</div>
+				<div class="col-lg-2 ml-auto cont-center">
+					<a href="#" class="header__coast" data-fancybox data-src="#coast__modal">
+						<img src="assets/img/header/Shop.png" alt="basket" class="header__basket">
+						<span class="header__quant"></span>
+						<p class="header__price"></p>
+					</a>
+					<div id="coast__modal">
+						<div class="modal-wrap" id="modal-wrap">
+							<div class="modal__item">
+								<div class="modal__product">
+									<p class="modal__title">Branded Shoe</p>
+									<img src="assets/img/products/product_1.png" alt="Shoe" class="modal__img">
+								</div>
+								<div class="modal__quant">
+									<button class="btn-minus">-</button>
+									<span class="modal__numb"></span>
+									<button class="btn-plus">+</button>
+								</div>
+								<span class="modal__price">300$</span>
+								<a href="#" class="modal__btn btn-delete">Delete</a>
+							</div>							
+							
+						</div>
+						<div class="modal__footer">
+							<div class="modal__total">Total: <span>$</span></div>
+							<a href="#" class="modal__btn btn-confirm">Pay now</a>
+						</div>
+					</div>
+					
+				</div>	
+			</div><!-- /.row -->
+		</div><!-- /.container -->
+	</header><!-- /HEADER -->
+
 	<div id="mini-cart">
 		
 	</div>
@@ -22,6 +70,7 @@
 	</section><!-- /PRODUCTS -->
 
 	<script src="js/jquery-3.5.1.min.js"></script>
+	<script src="js/jquery.fancybox.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<!-- <script src="js/slider.js"></script> -->
 	<script src="js/main.js"></script>
