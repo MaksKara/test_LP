@@ -1,12 +1,12 @@
 document.addEventListener('DOMContentLoaded', function(){
 	render();
-	checkCard();
-	showMiniCart();
 });
 
 window.onload = function () {
 	alignHeight();
 	window.onresize = alignHeight;
+	checkCard();
+	renderToCart();
 }
 
 let price = document.querySelector('.header__price'),
@@ -32,12 +32,12 @@ price.innerHTML = '0$';
 dotQuant.innerHTML = 0;
 
 let products = [
-	{id: 1, title: 'Branded Shoe', price: 300, img: 'assets/img/products/product_1.png', attribute: 'first', count: 1},
-	{id: 2, title: 'Branded Tees', price: 250, img: 'assets/img/products/product_2.png', attribute: 'second', count: 1},
-	{id: 3, title: 'Branded Shoe', price: 350, img: 'assets/img/products/product_3.png', attribute: 'third', count: 1},
-	{id: 4, title: 'Branded Shoe', price: 325, img: 'assets/img/products/product_4.png', attribute: 'fourth', count: 1},
-	{id: 5, title: 'EMS Woman Bag', price: 275, img: 'assets/img/products/product_5.png', attribute: 'fifth', count: 1},
-	{id: 6, title: 'Branded Cargos', price: 225, img: 'assets/img/products/product_6.png', attribute: 'sixth', count: 1}
+	{id: 1, title: 'Branded Shoe', price: 300, img: 'assets/img/products/product_1.png', attribute: 'first'},
+	{id: 2, title: 'Branded Tees', price: 250, img: 'assets/img/products/product_2.png', attribute: 'second'},
+	{id: 3, title: 'Branded Shoe', price: 350, img: 'assets/img/products/product_3.png', attribute: 'third'},
+	{id: 4, title: 'Branded Shoe', price: 325, img: 'assets/img/products/product_4.png', attribute: 'fourth'},
+	{id: 5, title: 'EMS Woman Bag', price: 275, img: 'assets/img/products/product_5.png', attribute: 'fifth'},
+	{id: 6, title: 'Branded Cargos', price: 225, img: 'assets/img/products/product_6.png', attribute: 'sixth'}
 ];
 
 const drawHTML = product => `
@@ -115,7 +115,8 @@ function alignHeight() {
 //************LOCAL****************
 //***********STORAGE***************
 //=================================
-let cart = {};
+let cart = [];
+let cartModal = [];
 
 document.addEventListener('click', event => {
 	event.preventDefault();
@@ -126,58 +127,82 @@ document.addEventListener('click', event => {
 
 
 function addToCart(event) {
-	const art = event.target.dataset.id;
-	if(cart[art] != undefined){
-		cart[art]++;
+	const count = event.target.dataset.id;
+	if(cart[count] != undefined){
+		cart[count]++;
 	} else {	
-		cart[art] = 1;
+		cart[count] = 1;
 	}
-	localStorage.setItem('cart', JSON.stringify(cart));
-	console.log(cart);
+	// localStorage.setItem('cart', JSON.stringify(cart));
+	// console.log(cart);
 
-	let obj = {};
-	let arr = [];
-	let mergedArr;
-	for(let g of products){		
-		if(art == `${g.attribute}`) {
-				arr = JSON.parse(localStorage.getItem('prod')) || [];
-			if(obj.id !== `${g.id}`){
-				obj = {id: `${g.id}`, price: `${g.price}`, img: `${g.img}`, title: `${g.title}`, count: 1};
-				// mergedArr = arr.concat(obj);
-				// localStorage.setItem('prod', JSON.stringify(mergedArr));
+	for(let g of products){
+		let price = `${g.price}`;
+		if(cart[price] != undefined){
+			cart[price] = price * cart[count];
+		} else {
+			cart[price] = price;
+		}
+
+		let productObject = {id: `${g.id}`, img: `${g.img}`, title: `${g.title}`, price: cart[price], count: cart[count]};
+		
+		if(count == `${g.attribute}`) {
+			let productArray = JSON.parse(localStorage.getItem('prod')) || [];
+			let i = productArray.findIndex(o => o.id === `${g.id}`);
+
+			if (productArray[i]) {
+				productArray[i] = productObject;
+				// console.log('if');
 			} else {
-				obj.count++;
-				// arr = JSON.parse(localStorage.getItem('prod')) || [];
-				
+				productArray.push(productObject);
+				// console.log('else');
 			}
-			mergedArr = arr.concat(obj);
-				localStorage.setItem('prod', JSON.stringify(mergedArr));
-			
-		console.log(mergedArr);
-		} 
-	}
-
-	showMiniCart();
+			localStorage.setItem('prod', JSON.stringify(productArray));
+			console.log(productArray);
+			console.log(productObject);
+		}
+		checkCard();
+		renderToCart();
+	} // for
 }
 
 function checkCard() {
-	let items = localStorage.getItem('cart');
+	let items = localStorage.getItem('prod');
 	if(items != null){
-		cart = JSON.parse(items);
+		cartModal = JSON.parse(items);
 	}
-}
-
-function showMiniCart() {
-	let out = '';
-	for(let w in cart){
-		out += w + '-------' + cart[w]+'<br>';
-	}
-	const miniCart = document.getElementById("mini-cart");
-	miniCart.innerHTML = out;
+	// console.log(cart);
+	renderToCart(cartModal);
 }
 
 
+//====================================
+//*************DRAW*TO****************
+//**************CART******************
+//====================================
+
+const drawCart = cart => ` 
+	<div class="modal__item">
+		<div class="modal__product">
+			<p class="modal__title">${cart.title}</p>
+			<img src="${cart.img}" alt="${cart.title}" class="modal__img">
+		</div>
+		<div class="modal__quant">
+			<button class="btn-minus">-</button>
+			<span class="modal__numb">${cart.count}</span>
+			<button class="btn-plus">+</button>
+		</div>
+		<span class="modal__price">${cart.price}$</span>
+		<button class="modal__btn btn-delete">Delete</button>
+	</div>
+`
 
 
+
+function renderToCart() {
+	const html = cartModal.map(drawCart).join('');
+	document.querySelector('#modal-wrap').innerHTML = html;
+
+}
 
 
